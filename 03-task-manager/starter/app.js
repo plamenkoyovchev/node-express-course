@@ -6,6 +6,7 @@ const connectToDb = require('./db/connect');
 // configures env variables in .env files
 require('dotenv').config();
 const notFound = require('./middleware/not-found');
+const errorHandlerMiddleware = require('./middleware/error-handler');
 
 const app = express();
 const port = 3000;
@@ -14,9 +15,12 @@ const port = 3000;
 app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
+
 // routes
 app.use('/api/v1/tasks', taskRoutes);
+
 app.use(notFound);
+app.use(errorHandlerMiddleware);
 
 const start = async () => {
     try {
