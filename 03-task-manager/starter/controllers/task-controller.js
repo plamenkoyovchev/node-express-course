@@ -1,5 +1,6 @@
 const Task = require('../models/Task');
 const asyncWrapper = require('../middleware/async');
+const { createCustomError } = require('../errors/custom-error');
 
 const getAllTasks = asyncWrapper(
     async (req, res) => {
@@ -19,7 +20,7 @@ const getTask = asyncWrapper(
     async (req, res) => {
         const task = await Task.findById(req.params.id).exec();
         if (!task) {
-            return res.status(404).json({ msg: 'Task not found' });
+            return next(createCustomError('Task not found', 404));
         }
 
         res.status(200).json({ task });
@@ -33,7 +34,7 @@ const updateTask = asyncWrapper(
             runValidators: true
         });
         if (!taskToUpdate) {
-            return res.status(404).json({ msg: 'Task not found' });
+            return next(createCustomError('Task not found', 404));
         }
 
         res.status(200).send({ task: taskToUpdate });
@@ -44,7 +45,7 @@ const deleteTask = asyncWrapper(
     async (req, res) => {
         const taskToDelete = await Task.findOneAndDelete({ _id: req.params.id });
         if (!taskToDelete) {
-            return res.status(404).json({ msg: "Task not found." });
+            return next(createCustomError('Task not found', 404));
         }
 
         res.status(200).send(true);
