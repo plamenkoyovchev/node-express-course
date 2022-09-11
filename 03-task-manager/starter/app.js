@@ -9,7 +9,7 @@ const notFound = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // middleware
 app.use('/static', express.static(path.join(__dirname, 'public')));
@@ -26,7 +26,7 @@ const start = async () => {
     try {
         await connectToDb(process.env.MONGO_CONNECTION_STRING);
         app.listen(port, () => {
-            console.log("Server is started on port 3000");
+            console.log(`Server is started on port ${port}`);
         });
     } catch (error) {
         console.error(error);
