@@ -1,12 +1,17 @@
+const Product = require('../models/product.js');
+
 const getAllProductsStatic = async (req, res) => {
     // Throwing the Error will be automatically handled by express-async-errors package (no need to call next)
     // The error will be available in error-handler.js middleware
     // throw new Error("from static producs"); 
-    res.status(200).send({ msg: 'products testing route' });
+
+    const products = await Product.find({});
+    res.status(200).send({ products });
 };
 
 const getAllProducts = async (req, res) => {
-    res.status(200).send({ msg: 'products route' });
+    const products = await Product.find({});
+    res.status(200).send({ products });
 };
 
 const getProduct = async (req, res) => {
