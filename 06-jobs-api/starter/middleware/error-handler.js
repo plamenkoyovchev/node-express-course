@@ -1,4 +1,3 @@
-const { CustomAPIError } = require('../errors');
 const { StatusCodes } = require('http-status-codes');
 const errorHandlerMiddleware = (err, req, res, next) => {
 
@@ -12,6 +11,11 @@ const errorHandlerMiddleware = (err, req, res, next) => {
       .map((item) => item.message)
       .join(',');
     customError.statusCode = err.statusCode;
+  }
+
+  if (err.name === 'CastError') {
+    customError.msg = `No item found with id: ${err.value}`;
+    customError.statusCode = StatusCodes.BAD_REQUEST;
   }
 
   return res.status(customError.statusCode).json({ msg: customError.msg });
