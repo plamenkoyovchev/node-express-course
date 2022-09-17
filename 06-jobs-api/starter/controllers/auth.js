@@ -8,7 +8,12 @@ const register = async (req, res) => {
         throw new BadRequestError('Please provide name, email and password.');
     }
 
-    const user = await User.create({ ...req.body });
+    let user = await User.findOne({ email });
+    if (user) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Email is already taken." });
+    }
+
+    user = await User.create({ ...req.body });
     const token = user.generateJWT();
 
     res.status(StatusCodes.CREATED)
